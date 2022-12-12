@@ -2,6 +2,7 @@
 - [Introducción](#introducción)
 - [Base teórica](#base-teórica)
 - [DMVs necesarias](#dmvs-necesarias)
+- [Conclusión y siguientes pasos](#conclusión-y-siguientes-pasos)
 
 # Introducción
 
@@ -11,8 +12,7 @@
 
 Hay herramientas de sobra para perseguirlos; con un método consistente, seguramente les des caza. El trabajo del DBA es localizarlos, crear las evidencias necesarias, y plantear soluciones.
 
-En este "artículo" te muestro que método puedes para localizarlos y plantear soluciones a los clientes.
- Hay mucha documentación y ejemplos para analizarlos; el objetivo es que te pueda servir como guía de aprendizaje para meter las manos en el barro. Sigue los enlaces que comparto porque se necesitan como "guia de estudio".
+En este "artículo" te muestro fundamentos para hacer los primeros diagnósticos. Hay mucha documentación y ejemplos para analizarlos; el objetivo es que te pueda servir como guía de aprendizaje para poco a poco sentirte cómogo analizando bloqueos. Sigue los enlaces que comparto porque se necesitan como "guia de estudio".
 
 
 # Base teórica
@@ -25,8 +25,11 @@ De igual manera, para entender cómo funcionan los bloqueos en SQL Server, neces
 En [este enlace](https://medium.com/r/?url=https%3A%2F%2Flearn.microsoft.com%2Fen-us%2Fsql%2Frelational-databases%2Fsql-server-transaction-locking-and-row-versioning-guide%3Fsource%3Drecommendations%26view%3Dsql-server-ver16) tienes toda la base teórica necesaria para comprender los niveles de aislamiento en SQL Server. No es necesario que te estudies el contenido completo (poco a poco); empieza por estas secciones:
 
 - [Transaction basics](https://medium.com/r/?url=https%3A%2F%2Flearn.microsoft.com%2Fen-us%2Fsql%2Frelational-databases%2Fsql-server-transaction-locking-and-row-versioning-guide%3Fsource%3Drecommendations%26view%3Dsql-server-ver16%23Basics): conceptos básicos, ACID, transacciones implícitas y explícitas, contexto, inicio y confirmación (BEGIN/COMMIT TRAN).
+  
 - [Locking and row versioning basics](https://medium.com/r/?url=https%3A%2F%2Flearn.microsoft.com%2Fen-us%2Fsql%2Frelational-databases%2Fsql-server-transaction-locking-and-row-versioning-guide%3Fsource%3Drecommendations%26view%3Dsql-server-ver16%23Lock_Basics): cómo se adquieren bloqueos (locks), y efectos de la concurrencia (lecturas sucias, no repetibles, perdida de inserciones, etc.). La segunda parte toca los niveles de aislamiento, y sus efectos en la concurrencia (por ejemplo, qué nivel de aislamiento elegir para que el dato leído en una transacción sea inmutable).
+  
 - [Locking in the Database Engine](https://medium.com/r/?url=https%3A%2F%2Flearn.microsoft.com%2Fen-us%2Fsql%2Frelational-databases%2Fsql-server-transaction-locking-and-row-versioning-guide%3Fsource%3Drecommendations%26view%3Dsql-server-ver16%23Lock_Engine): cómo implementa SQL Server los puntos anteriores, es decir, qué tipo de recursos puede bloquear el motor (registro, página, objeto, base de datos) y tipos de bloqueos (compartidos, no compartidos, exclusivos, …).
+  
 - [Lock compatibility](https://medium.com/r/?url=https%3A%2F%2Flearn.microsoft.com%2Fen-us%2Fsql%2Frelational-databases%2Fsql-server-transaction-locking-and-row-versioning-guide%3Fsource%3Drecommendations%26view%3Dsql-server-ver16%23lock_compatibility): donde se explica la compatibilidad de bloqueos; por ejemplo, dos conexiones no puede tener asignado bloqueo exclusivo (X) sobre un recurso.
 
 Esas secciones son fundamentales si necesitas entender situaciones de bloqueos. Responde al siguiente ejercicio para ver cómo estas:
@@ -118,4 +121,18 @@ que a su vez no permite ejecutar la instrucción: (@1 tinyint)UPDATE [dbo].[tabl
 
 Podemos decir que hemos diagnosticado la situación de bloqueo, pero no tenemos solución; sólo queda esperar... 
 Si dos conexiones, intentan borrar la misma fila (como es el caso que he simulado), toca esperar a que la primera conexión que tomó el bloqueo exclusivo (columna wait_resource) sobre el registro (el blocker_session_id = 67) complete lo que está haciendo.
+
+# Conclusión y siguientes pasos
+
+Tienes que perderle el miedo a los bloqueos. Lo conseguirás con muchas pruebas. No hay atajos.
+
+Sería bueno que juegues en setup local de SQL Server con Management Studio y dos conexiones bloqueandose una a otra. Deja abiertas transacciones, comprueba con las consultas de DMVs de arriba qué hay bloqueado. Lanza consultas que se queden esperando; no la canceles, utiliza la DMV en otra ventana de SSMS y comprueba los bloqueos. 
+
+Utiliza la opción de abrir ventanas de consultas el vertical (ver imagen). 
+No te asustes por tener conexiones esperando (fijate abajo 30 minutos).
+
+Hace mucho tiempo, cuando empecé como tú, dejar conexiones abiertas en tu entorno de lab para hacer pruebas, dejaba sensación parecida a Neo en Matrix... parabas el tiempo, y analizabas. Cuando tengas esa sensación, te empezarán a gustar los bloqueos 😉
+
+
+![image](./png/intro-bloqueos/SSMS-multiple-queries.png)
 
