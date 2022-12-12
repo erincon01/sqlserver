@@ -19,7 +19,7 @@ from sys.dm_tran_locks
 where request_session_id = 64; -- CAMBIA POR TU SESSION_ID
 ```
 
-![image](./png/SSMS-database-connections.png)
+![image](./png/ej1/SSMS-database-connections.png)
 
 
 # Solución
@@ -31,7 +31,7 @@ Sin miedo, ejecutalo!
 
 Verás como tras un tiempo, SQL Server finalizará con este error:
 
-![image](./png/bloqueos-drop-database.png)
+![image](./png/ej1/bloqueos-drop-database.png)
 
 Si durante el intento de borrado, has sido rápido para ejecutar esta consulta:
 
