@@ -126,7 +126,7 @@ Si dos conexiones, intentan borrar la misma fila (como es el caso que he simulad
 
 Tienes que perderle el miedo a los bloqueos. Lo conseguirás con muchas pruebas. No hay atajos.
 
-Sería bueno que juegues en setup local de SQL Server con Management Studio y dos conexiones bloqueandose una a otra. Deja abiertas transacciones, comprueba con las consultas de DMVs de arriba qué hay bloqueado. Lanza consultas que se queden esperando; no la canceles, utiliza la DMV en otra ventana de SSMS y comprueba los bloqueos. 
+Sería bueno que juegues en setup local de SQL Server con Management Studio y dos conexiones bloqueandose una a otra. Deja abiertas transacciones, comprueba con las consultas de DMVs de arriba qué hay bloqueado. Lanza consultas que se queden esperando; no la canceles, utiliza la DMV en otra ventana de SSMS y comprueba los bloqueos.
 
 Utiliza la opción de abrir ventanas de consultas el vertical (ver imagen). 
 No te asustes por tener conexiones esperando (fijate abajo 30 minutos).
