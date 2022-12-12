@@ -8,13 +8,11 @@
 # Resumen
 
 lista de publicaciones:
-- [Fundamentos de bloqueos](/Fundamentos%20de%20bloqueos.md)
-- [¿Por qué cada conexión abierta tiene un bloqueo compartido (S) del tipo de recurso = DATABASE)](/DATABASE%20como%20resource_type.md)
-
+- [Fundamentos de bloqueos](/00-Fundamentos-de-bloqueos.md)
+- [Técnicas de análisis de bloqueos](/01-Tecnica-de-an%C3%A1lisis-de-blqueos.md)
 
 lista de ejercicios:
-- [DATABASE como resource_type](/DATABASE%20como%20resource_type.md)
-
+- [DATABASE como resource_type](/ej01-DATABASE-como-resource_type.md)
 
 # Herramientas necesarias
 - SQL Server Managemen Studio
