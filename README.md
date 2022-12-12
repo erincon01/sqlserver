@@ -5,13 +5,11 @@
 - [Resumen](#resumen)
 - [Herramientas necesarias](#herramientas-necesarias)
 
-
-
-
 # Resumen
 
 lista de publicaciones:
 - [Fundamentos de bloqueos](/Fundamentos%20de%20bloqueos.md)
+- [¿Por qué cada conexión abierta tiene un bloqueo compartido (S) del tipo de recurso = DATABASE)](/DATABASE%20como%20resource_type.md)
 
 
 lista de ejercicios:
