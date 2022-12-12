@@ -59,19 +59,19 @@ from sys.dm_tran_locks
 where request_session_id = 64; -- CAMBIA POR TU SESSION_ID
 ```
 
-![image](./png/database-lock.png)
+![image](./png/ej1/database-lock.png)
 
 La respuesta está en [DATABASE como resource type](./DATABASE%20como%20resource_type.md)
 
 # DMVs necesarias
 
 Estas son las DMVs que necesitas para analizar cuestiones de bloqueos:
-- [sys.dm_tran_locks](https://medium.com/r/?url=https%3A%2F%2Flearn.microsoft.com%2Fen-us%2Fsql%2Frelational-databases%2Fsystem-dynamic-management-views%2Fsys-dm-tran-locks-transact-sql%3Fview%3Dsql-server-ver16): Información de bloqueos adquiridos por las conexiones. Revisa el enlace para entender lo que informa cada columna. Con el tiempo añadirás columnas a tu arsenal, pero para empezar te servirán: resource_type, resource_database_id, request_mode, request_type, request_status, y request_session_id.
-- [sys.dm_exec_sessions](https://medium.com/r/?url=https%3A%2F%2Flearn.microsoft.com%2Fes-es%2Fsql%2Frelational-databases%2Fsystem-dynamic-management-views%2Fsys-dm-exec-sessions-transact-sql%3Fview%3Dsql-server-ver16): Información de las conexiones. Quédate con esta relación de tablas:
-![image](./png/DMVs-sysprocesses-relacion.png)
-- [sys.dm_exec_requests](https://medium.com/r/?url=https%3A%2F%2Flearn.microsoft.com%2Fen-us%2Fsql%2Frelational-databases%2Fsystem-dynamic-management-views%2Fsys-dm-exec-requests-transact-sql%3Fview%3Dsql-server-ver16): Información de cada petición que está procesando SQL Server. la columna session_id, se enlaza con request_session_id si hay bloqueos. Columnas de interés: session_id, start_time, status, command, blocking_session_id, database_id, wait_type, wait_time, wait_resource, sql_handle, y plan_handle.
-- [sys.dm_exec_connections](https://medium.com/r/?url=https%3A%2F%2Flearn.microsoft.com%2Fen-us%2Fsql%2Frelational-databases%2Fsystem-dynamic-management-views%2Fsys-dm-exec-connections-transact-sql%3Fview%3Dsql-server-ver16): Información de las conexiones abiertas en la instancia de SQL Server. Columnas como session_id, num_read, num_writes, most_recent_sql_handle. Enlaza con sys.dm_exec_requests por la columna session_id.
-- [sys.dm_exec_sql_text](https://medium.com/r/?url=https%3A%2F%2Flearn.microsoft.com%2Fen-us%2Fsql%2Frelational-databases%2Fsystem-dynamic-management-views%2Fsys-dm-exec-sql-text-transact-sql%3Fview%3Dsql-server-ver16): Función que devuelve la instrucción SQL para un sql_handle (relacionado con la DMV anterior).
+- [sys.dm_tran_locks](https://learn.microsoft.com/en-us/sql/relational-databases/system-dynamic-management-views/sys-dm-tran-locks-transact-sql?view=sql-server-ver16): Información de bloqueos adquiridos por las conexiones. Revisa el enlace para entender lo que informa cada columna. Con el tiempo añadirás columnas a tu arsenal, pero para empezar te servirán: resource_type, resource_database_id, request_mode, request_type, request_status, y request_session_id.
+- [sys.dm_exec_sessions](https://learn.microsoft.com/es-es/sql/relational-databases/system-dynamic-management-views/sys-dm-exec-sessions-transact-sql?view=sql-server-ver16): Información de las conexiones. Quédate con esta relación de tablas:
+![image](./png/intro-bloqueos/DMVs-sysprocesses-relacion.png)
+- [sys.dm_exec_requests](https://learn.microsoft.com/en-us/sql/relational-databases/system-dynamic-management-views/sys-dm-exec-requests-transact-sql?view=sql-server-ver16): Información de cada petición que está procesando SQL Server. la columna session_id, se enlaza con request_session_id si hay bloqueos. Columnas de interés: session_id, start_time, status, command, blocking_session_id, database_id, wait_type, wait_time, wait_resource, sql_handle, y plan_handle.
+- [sys.dm_exec_connections](https://learn.microsoft.com/es-es/sql/relational-databases/system-dynamic-management-views/sys-dm-exec-connections-transact-sql?view=sql-server-ver16): Información de las conexiones abiertas en la instancia de SQL Server. Columnas como session_id, num_read, num_writes, most_recent_sql_handle. Enlaza con sys.dm_exec_requests por la columna session_id.
+- [sys.dm_exec_sql_text](https://learn.microsoft.com/en-us/sql/relational-databases/system-dynamic-management-views/sys-dm-exec-sql-text-transact-sql?view=sql-server-ver16): Función que devuelve la instrucción SQL para un sql_handle (relacionado con la DMV anterior).
 
 Este JOIN de DMVs te servirá en tus análisis:
 
@@ -97,9 +97,9 @@ JOIN    sys.dm_exec_connections c
 ON      blocker.session_id = c.session_id
 OUTER APPLY sys.dm_exec_sql_text(c.most_recent_sql_handle) sql_blocker
 ```
-donde para una situación de bloqueos, tenemos este resultado:
+Donde para una situación de bloqueos, podríamos tener este resultado:
 
-![image](./png/resultado-DMV.png)
+![image](./png/intro-bloqueos/resultado-DMV.png)
 
 Que muestra esta situación:
 
