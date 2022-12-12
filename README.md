@@ -15,5 +15,8 @@ lista de ejercicios:
 - [DATABASE como resource_type](/ej01-DATABASE-como-resource_type.md)
 
 # Herramientas necesarias
-- SQL Server Managemen Studio
-- Azure Data Studio
+
+- SQL Server Managemen Studio - [Descarga](https://learn.microsoft.com/en-us/sql/ssms/download-sql-server-management-studio-ssms?view=sql-server-ver16).
+- Azure Data Studio - [Descarga](https://learn.microsoft.com/en-us/sql/azure-data-studio/download-azure-data-studio?view=sql-server-ver16).
+- 
+

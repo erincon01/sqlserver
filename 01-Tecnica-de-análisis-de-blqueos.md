@@ -1,22 +1,16 @@
 
 - [Introducción](#introducción)
-- [TRABAJO EN PROGRESO. VUELVE MÁS ADELANTE 😉](#trabajo-en-progreso-vuelve-más-adelante-)
 - [Técnica a seguir](#técnica-a-seguir)
 
 # Introducción
 
-# TRABAJO EN PROGRESO. VUELVE MÁS ADELANTE 😉
+TRABAJO EN PROGRESO. VUELVE MÁS ADELANTE 😉
 
-...
-
-...
-
-...
 
 
 # Técnica a seguir
 
-Ahora no explicamos si el problema raiz que tiene el servidor es debido a bloqueos. Obviamente, si en el monitor de procesos de SQL Server ves muchos procesos en estado SUSPENDED, y los WAIT_STATS te dicen que hay mucha latencia por bloqueos (LOCKS), es obvio donde hay que investigar:
+Ahora no vamos a explicar  si el problema raiz que tiene el servidor es debido a bloqueos. Partimos de la base de que el problema es de bloqueos. Naturalmente, si en el monitor de procesos de SQL Server ves muchos procesos en estado SUSPENDED, y los WAIT_STATS te dicen que hay mucha latencia por bloqueos (LOCKS), es obvio donde hay que investigar:
 
 - Resource waits:
   - wait category = LOCK.

@@ -120,7 +120,11 @@ que a su vez no permite ejecutar la instrucción: (@1 tinyint)UPDATE [dbo].[tabl
 - que a su vez no permite ejecutar la instrucción: TRUNCATE table dbo.tabla.
 
 Podemos decir que hemos diagnosticado la situación de bloqueo, pero no tenemos solución; sólo queda esperar... 
-Si dos conexiones, intentan borrar la misma fila (como es el caso que he simulado), toca esperar a que la primera conexión que tomó el bloqueo exclusivo (columna wait_resource) sobre el registro (el blocker_session_id = 67) complete lo que está haciendo.
+Si dos conexiones, intentan borrar la misma fila (como es el caso que he simulado), toca esperar a que la primera conexión que tomó el bloqueo exclusivo (columna wait_resource) sobre el registro (el blocker_session_id = 67) complete lo que está haciendo. Cuando vaya la segunda conexión, la lógica de la aplicación que hizo la llamada debería estar preparada para el intento de borrado de una fila que borró la conexión anterior. 
+
+> Nota: para el contexto de este artículo introductorio, quizás es avanzado, pero ten en cuenta que hay ORMs y aplicaciones que verifican que al borrar un registro, si el registro no se ha borrado, se genere una excepción. Mira este [enlace](https://groups.google.com/g/sqlalchemy/c/-uMK7x4Wg0I?pli=1).
+
+Para completar lo anterior, el trabajo de análisis es un poco más complicado, porque como DBA tras diagnosticar, hay que intentar mejorar. La situación anterior, quizás necesite incluso que revises el plan de ejecución de las consultas para ver si los índices se pueden utilizar de una forma más eficiente. Este tema lo trataremos en [este artículo **PENDIENTE**](/05-Indexacion-y-bloqueos.md).  
 
 # Conclusión y siguientes pasos
 
