@@ -24,8 +24,6 @@ where request_session_id = 64; -- CAMBIA POR TU SESSION_ID
 
 # Solución
 
-Aprende a pescar!
-
 Abre una nueva conexión y ejecutar el comando DROP DATABASE <nombre_de_BBDD>.
 Sin miedo, ejecutalo!
 
