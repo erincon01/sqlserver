@@ -2,10 +2,10 @@
 # **Para empezar con SQL Server**
 
 - [**Para empezar con SQL Server**](#para-empezar-con-sql-server)
-- [Guia de estudio](#guia-de-estudio)
+- [Guía de estudio](#guia-de-estudio)
 - [Herramientas](#herramientas)
 
-# Guia de estudio
+# Guía de estudio
 
 Publicaciones:
 - Configuración
