@@ -124,7 +124,7 @@ Si dos conexiones, intentan borrar la misma fila (como es el caso que he simulad
 
 > Nota: para el contexto de este artículo introductorio, quizás es avanzado, pero ten en cuenta que hay ORMs y aplicaciones que verifican que al borrar un registro, si el registro no se ha borrado, se genere una excepción. Mira este [enlace](https://groups.google.com/g/sqlalchemy/c/-uMK7x4Wg0I?pli=1).
 
-Para completar lo anterior, el trabajo de análisis es un poco más complicado, porque como DBA tras diagnosticar, hay que intentar mejorar. La situación anterior, quizás necesite incluso que revises el plan de ejecución de las consultas para ver si los índices se pueden utilizar de una forma más eficiente. Este tema lo trataremos en [este artículo **PENDIENTE**](/05-Indexacion-y-bloqueos.md).  
+Para completar lo anterior, el trabajo de análisis es un poco más complicado, porque como DBA tras diagnosticar, hay que intentar mejorar. La situación anterior, quizás necesite incluso que revises el plan de ejecución de las consultas para ver si los índices se pueden utilizar de una forma más eficiente. Este tema se trata en [este artículo](/Indexacion/05-Indexacion-y-bloqueos.md).  
 
 # Conclusión y siguientes pasos
 

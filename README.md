@@ -1,7 +1,7 @@
 
-# **Para empezar con SQL Server**
+# Para empezar con SQL Server
 
-- [**Para empezar con SQL Server**](#para-empezar-con-sql-server)
+- [Para empezar con SQL Server](#para-empezar-con-sql-server)
 - [Guia de estudio](#guia-de-estudio)
 - [Herramientas](#herramientas)
 
@@ -17,13 +17,24 @@ Publicaciones:
   - Trazas/Eventos Extendidos
   - Copias de seguridad
   - Defragmentación
-- Query Store
-- DMVs de salud
+- Planes de ejecución
+  - Fundamentos de planes de ejecución
+  - Operadores habituales
+  - Otros operadores
+- Tablas
+  - Heaps
+  - Indice clustered, non-clustered, y filtered
+  - Indices column-store
+  - Indices In-Memory
 - Bloqueos
-  - [Fundamentos de bloqueos](/00-Fundamentos-de-bloqueos.md)
-  - [Técnicas de análisis de bloqueos](/01-Tecnica-de-analisis-de-bloqueos.md)
+  - [Fundamentos de bloqueos](/Bloqueos/00-Fundamentos-de-bloqueos.md)
+  - [Técnicas de análisis de bloqueos](/Bloqueos/01-Tecnica-de-analisis-de-bloqueos.md)
   - Ejercicios
-    - [DATABASE como resource_type](/ej01-DATABASE-como-resource_type.md)
+    - [DATABASE como resource_type](/Bloqueos/ej01-DATABASE-como-resource_type.md)
+- Query Store
+- Monitorización
+  - DMVs
+  - GUI
 
 # Herramientas
 
