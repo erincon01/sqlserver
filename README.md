@@ -31,6 +31,7 @@ Publicaciones:
   - [Técnicas de análisis de bloqueos](/Bloqueos/01-Tecnica-de-analisis-de-bloqueos.md)
   - Ejercicios
     - [DATABASE como resource_type](/Bloqueos/ej01-DATABASE-como-resource_type.md)
+    - [Índice bloqueado](/Bloqueos/ej02-Indice-bloqueado.md) 
 - Query Store
 - Monitorización
   - DMVs
