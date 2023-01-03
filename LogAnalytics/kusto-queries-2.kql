@@ -1,0 +1,80 @@
+//
+// listar tablas y registros en un recurso de Log
+search "*" | summarize count() by $table | sort by count_ desc
+
+
+// Wait stats over the last hour, by Logical Server and Database. 
+//
+AzureDiagnostics
+| where ResourceProvider == "MICROSOFT.SQL"
+| where TimeGenerated >= ago(60min)
+| parse _ResourceId with * "/microsoft.sql/servers/" LogicalServerName "/databases/" DatabaseName
+| summarize Total_count_60mins = sum(delta_waiting_tasks_count_d) by LogicalServerName, DatabaseName, wait_type_s
+
+
+// GROUP BY tasks_count and duration_time
+//
+AzureDiagnostics
+| where ResourceProvider == "MICROSOFT.SQL"
+| where TimeGenerated >= ago(60min)
+| parse _ResourceId with * "/microsoft.sql/servers/" LogicalServerName "/databases/" DatabaseName
+| summarize Total_count_60mins = sum(delta_waiting_tasks_count_d), Total_duration_60mins = sum(delta_wait_time_ms_d), AVG_waits_per_request = avg(delta_wait_time_ms_d/delta_waiting_tasks_count_d) by LogicalServerName, DatabaseName, wait_type_s
+
+
+// recogida full para agregar en Power BI
+//
+AzureDiagnostics
+| where ResourceProvider == ""MICROSOFT.SQL"" and (OperationName  == ""DatabaseWaitStatistcsEvent"" or OperationName  == ""DatabaseWaitStatisticsEvent"")
+| parse _ResourceId with * ""/microsoft.sql/servers/"" LogicalServerName ""/databases/"" DatabaseName
+| project TimeGenerated, Category, ResourceGroup, LogicalServerName_s, DatabaseName_s, wait_type_s, delta_wait_time_ms_d, delta_waiting_tasks_count_d 
+
+
+// descripción de categorias en log Analytics
+AzureDiagnostics
+| summarize count() by Category, OperationName
+
+/*
+DatabaseWaitStatistics	    DatabaseWaitStatistcsEvent
+QueryStoreRuntimeStatistics	QueryStoreRuntimeStatisticsEvent
+QueryStoreWaitStatistics	QueryStoreWaitStatisticsEvent
+Errors	                    ErrorEvent
+Timeouts                	TimeoutEvent
+Blocks	                    BlockEvent
+AutomaticTuning		
+Deadlocks	                DeadlockEvent
+*/
+
+// Error log
+AzureDiagnostics
+| where ResourceProvider == "MICROSOFT.SQL" and Category  == "Errors"
+| project SourceSystem, ResourceProvider, SubscriptionId, Resource, ResourceGroup, TimeGenerated, OperationName, LogicalServerName_s, error_number_d, Message
+
+// Timeouts
+AzureDiagnostics
+| where ResourceProvider == "MICROSOFT.SQL" and Category  == "Timeouts"
+| project SourceSystem, ResourceProvider, SubscriptionId, Resource, ResourceGroup, TimeGenerated, OperationName, LogicalServerName_s, error_state_d
+
+// Blocks
+AzureDiagnostics
+| where ResourceProvider == "MICROSOFT.SQL" and Category  == "Blocks"
+| project SourceSystem, ResourceProvider, SubscriptionId, Resource, ResourceGroup, TimeGenerated, OperationName, LogicalServerName_s, database_name_s, lock_mode_s, resource_owner_type_s, blocked_process_filtered_s, duration_d
+
+// Deadlocks
+AzureDiagnostics
+| where ResourceProvider == "MICROSOFT.SQL" and Category  == "Deadlocks"
+| project SourceSystem, ResourceProvider, SubscriptionId, Resource, ResourceGroup, TimeGenerated, OperationName, LogicalServerName_s, deadlock_xml_s
+
+// Metricas de consumo Azure
+AzureMetrics
+| where ResourceProvider == "MICROSOFT.SQL" and Type  == "AzureMetrics"
+| project SourceSystem, ResourceProvider, SubscriptionId, Resource, ResourceGroup, TimeGenerated, MetricName, Total, TimeGrain, UnitName
+
+// cuidado con columas --> Count indica numero de medidas, Maximum el maximo de las medidas del periodo y AVG la media de las medidas del periodo
+// utilizar AVG porque es lo más aproximado
+| project SourceSystem, ResourceProvider, SubscriptionId, Resource, ResourceGroup, TimeGenerated, MetricName, Average, Maximum, Total, Count, TimeGrain, UnitName
+
+// filtro where --> ojo con UTC!
+| where TimeGenerated >= datetime(2022-12-23T22:26) and TimeGenerated <= datetime(2022-12-23T22:40) 
+
+
+

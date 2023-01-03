@@ -1,0 +1,69 @@
+//
+// registros totales
+search *
+| summarize count()
+
+//
+// cuantas tablas
+search *
+| summarize dcount($table)
+
+//
+// cuantos registros por tabla
+search *
+| summarize count() by $table 
+| sort by count_ desc
+
+//
+// muestreo de columnas
+AzureMetrics
+| take 10
+
+// 
+// cuantos registros por MetricName
+AzureMetrics
+| summarize count() by MetricName
+| sort by count_
+
+// 
+// operador has ( %valor% )
+AzureMetrics
+| where MetricName has "percent"
+| summarize count() by MetricName
+| sort by count_
+
+// 
+// operador !has ( %valor% )
+AzureMetrics
+| where MetricName !has "percent"
+| summarize count() by MetricName
+| sort by count_
+
+// 
+// operador == 
+AzureMetrics
+| where MetricName == "log_write_percent"
+| summarize count() by MetricName
+| sort by count_
+
+//
+// operador prefix
+AzureMetrics
+| where MetricName hasprefix "dtu"
+| summarize count() by MetricName
+| sort by count_
+
+//
+// operador suffix -- BUG. No funciona
+AzureMetrics
+| where MetricName hassuffix "dtu"
+| summarize count() by MetricName
+| sort by count_
+
+// 
+// tablas que contienen texto
+search *
+| where * contains "subscription"
+| summarize count() by $table
+| sort by count_
+
