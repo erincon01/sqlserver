@@ -140,3 +140,79 @@ Hace mucho tiempo, cuando empecé como tú, dejar conexiones abiertas en tu ento
 
 ![image](./png/intro-bloqueos/SSMS-multiple-queries.png)
 
+
+
+
+
+
+
+Query para buscar bloqueos:
+- bloqueador, y bloqueado.
+- propiedades de la conexión: usuario, aplicacion, ...
+- TSQL bloqueada, y bloqueadora
+
+
+```
+
+ SELECT  @ts,
+                    blocker.session_id blocker_session_id,
+                    blocked.session_id blocked_session_id,
+                    blocker.database_id blocker_database_id,
+                    blocked.database_id blocked_database_id,
+                    blocker.login_name blocker_login_name,
+                    blocked.login_name blocked_login_name,
+                    CASE blocker.transaction_isolation_level
+                      WHEN 0 THEN 'Unspecified'
+                      WHEN 1 THEN 'ReadUncomitted'
+                      WHEN 2 THEN 'ReadCommitted'
+                      WHEN 3 THEN 'Repeatable'
+                      WHEN 4 THEN 'Serializable'
+                      WHEN 5 THEN 'Snapshot'
+                    END blocker_transaction_isolation_level,
+                    CASE blocked.transaction_isolation_level
+                      WHEN 0 THEN 'Unspecified'
+                      WHEN 1 THEN 'ReadUncomitted'
+                      WHEN 2 THEN 'ReadCommitted'
+                      WHEN 3 THEN 'Repeatable'
+                      WHEN 4 THEN 'Serializable'
+                      WHEN 5 THEN 'Snapshot'
+                    END blocked_transaction_isolation_level,
+                    blocker.open_transaction_count blocker_open_transaction_count,
+                    blocked.open_transaction_count blocked_open_transaction_count,
+                    sql_blocker.text sql_blocker_sql_query,
+                    sql_blocked.text sql_blocked_most_recent_sql_query,
+                    blocker.last_request_start_time blocker_last_request_start_time,
+                    blocked.last_request_start_time blocked_last_request_start_time,
+                    blocker.last_request_end_time blocker_last_request_end_time,
+                    blocked.last_request_end_time blocked_last_request_end_time,
+                    blocker.status blocker_status,
+                    blocked.status blocked_status,
+                    req.status blocked_status2,
+                    req.command,
+                    req.wait_type,
+                    req.wait_time,
+                    req.last_wait_type,
+                    req.wait_resource,
+                    blocker.reads blocker_reads,
+                    blocker.writes blocker_writes,
+                    blocker.memory_usage blocker_memory_usage,
+                    blocker.cpu_time blocker_cpu_time,
+                    blocked.reads blocked_reads,
+                    blocked.writes blocked_writes,
+                    blocked.memory_usage blocked_memory_usage,
+                    blocked.cpu_time blocked_cpu_time,
+                    blocker.program_name blocker_program_name,
+                    blocked.program_name blocked_program_name
+            FROM    sys.dm_exec_requests req
+            JOIN    sys.dm_exec_sessions blocked
+            ON      req.session_id = blocked.session_id
+            JOIN    sys.dm_exec_sessions blocker
+            ON      req.blocking_session_id = blocker.session_id
+            OUTER APPLY sys.dm_exec_sql_text(req.sql_handle) sql_blocked
+            JOIN    sys.dm_exec_connections c
+            ON      blocker.session_id = c.session_id
+            OUTER APPLY sys.dm_exec_sql_text(c.most_recent_sql_handle) sql_blocker
+            WHERE   req.wait_time >= @lock_time_ms;
+```
+
+
