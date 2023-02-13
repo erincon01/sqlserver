@@ -2,8 +2,9 @@
   "ExpandedNodes": [
     "",
     "\\Bloqueos",
+    "\\Indexacion",
     "\\LogAnalytics"
   ],
-  "SelectedNode": "\\LogAnalytics\\kusto-queries-1.kql",
+  "SelectedNode": "\\Bloqueos\\00-Fundamentos-de-bloqueos.md",
   "PreviewInSolutionExplorer": false
 }

@@ -33,6 +33,8 @@ Publicaciones:
     - [DATABASE como resource_type](/Bloqueos/ej01-DATABASE-como-resource_type.md)
     - [Índice bloqueado](/Bloqueos/ej02-Indice-bloqueado.md) 
 - Query Store
+- Arquitectura
+  - [Borrados lógicos](/Arquitectura/BorradosLogicos/Borrados-logicos.ipynb)
 - Monitorización
   - DMVs
   - GUI
