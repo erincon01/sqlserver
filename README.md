@@ -15,8 +15,8 @@ Publicaciones:
 - Mantenimiento
   - Errorlog
   - Trazas/Eventos Extendidos
-  - Copias de seguridad
-  - Defragmentación
+  - Bases de datos [copias de seguridad](/Mantenimiento/copias_de_seguridad.ipynb)
+  - Objetos (tablas, e índices): [Análisis de fragmentación](/Mantenimiento/analisis_fragmentacion.ipynb), [Defragmentación](/Mantenimiento/defragmentacion.ipynb)
 - Planes de ejecución
   - Fundamentos de planes de ejecución
   - Operadores habituales
@@ -38,8 +38,8 @@ Publicaciones:
 - Monitorización
   - DMVs
   - GUI
-  - Análisis de eficiencia -- Referencia para clientes [trazas vs XEvents](/Rendimiento/trazas-Xevent.ipynb)
-  - Análisis de eficienica -- Referencia para clientes [trazas vs Auditing](/Rendimiento/trazas-Auditing.ipynb)
+  - Análisis de eficiencia -- Referencia para clientes [trazas vs XEvents](/Monitorizacion/trazas-Xevent.ipynb)
+  - Análisis de eficienica -- Referencia para clientes [trazas vs Auditing](/Monitorizacion/trazas-Auditing.ipynb)
 
 # Herramientas
 
