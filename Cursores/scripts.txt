@@ -1,0 +1,252 @@
+ELECT TOP 20 
+    SUBSTRING(qt.TEXT, (qs.statement_start_offset/2)+1,
+    ((CASE qs.statement_end_offset
+         WHEN -1 THEN DATALENGTH(qt.TEXT)
+         ELSE qs.statement_end_offset
+      END - qs.statement_start_offset)/2)+1) as query,
+    qs.execution_count,
+    qs.total_logical_reads, qs.last_logical_reads,
+    qs.total_logical_writes, qs.last_logical_writes,
+    qs.total_worker_time, qs.last_worker_time,
+    qs.total_elapsed_time/1000000 total_elapsed_time_in_S,
+    qs.last_elapsed_time/1000000 last_elapsed_time_in_S,
+    qs.last_execution_time,
+    qp.query_plan
+FROM 
+    sys.dm_exec_query_stats qs
+CROSS APPLY 
+    sys.dm_exec_sql_text(qs.sql_handle) qt
+CROSS APPLY 
+    sys.dm_exec_query_plan(qs.plan_handle) qp
+-- ORDER BY 
+--    qs.total_logical_reads DESC -- logical reads
+-- ORDER BY 
+--     qs.total_logical_writes DESC -- logical writes
+ORDER BY 
+    qs.total_worker_time DESC -- CPU time
+	
+	
+select so.name, si.name, si.rows, si.dpages, cast(si.dpages * 8.0 / (1024 * 1024) as decimal(10,2)) gb
+from sys.sysindexes si
+join sys.tables so
+on si.id = so.object_id
+order by si.dpages desc
+
+
+
+
+go
+SELECT 
+    CONVERT (varchar(30), getdate(), 126) AS runtime,
+	object_name (mid.object_id) object_name,
+	v.rows,
+	cast(v.gb as decimal(10,2)) gb,
+    CONVERT (decimal (28, 1), 
+        migs.avg_total_user_cost * migs.avg_user_impact * (migs.user_seeks + migs.user_scans) 
+        ) AS estimated_improvement,
+    'CREATE INDEX missing_index_' + 
+        CONVERT (varchar, mig.index_group_handle) + '_' + 
+        CONVERT (varchar, mid.index_handle) + ' ON ' + 
+        mid.statement + ' (' + ISNULL (mid.equality_columns, '') + 
+        CASE
+            WHEN mid.equality_columns IS NOT NULL
+            AND mid.inequality_columns IS NOT NULL THEN ','
+            ELSE ''
+        END + ISNULL (mid.inequality_columns, '') + ')' + 
+        ISNULL (' INCLUDE (' + mid.included_columns + ')', '') + ' WITH (ONLINE = ON);' AS create_index_statement
+FROM sys.dm_db_missing_index_groups mig
+JOIN sys.dm_db_missing_index_group_stats migs ON 
+    migs.group_handle = mig.index_group_handle
+JOIN sys.dm_db_missing_index_details mid ON 
+    mig.index_handle = mid.index_handle
+INNER JOIN (select so.object_id, max(k.rows) rows, sum(k.dpages * 8.0 / (1024*1024) ) gb from sys.objects so join sys.sysindexes k on so.object_id = k.id group by so.object_id) v
+on v.object_id = mid.object_id
+ORDER BY estimated_improvement DESC;
+
+
+
+if (object_id('tempdb.dbo.##Tables') is not null) 
+  drop table ##Tables;
+create table ##Tables (
+object_name sysname,
+schema_name sysname,
+index_id int,
+partition_number int,
+size_with_current_compression_setting bigint,
+size_with_requested_compression_setting bigint,
+sample_size_with_current_compression_setting bigint,
+sample_size_with_requested_compression_setting bigint
+);
+set nocount on -- Collect all tables
+declare @tableName sysname
+declare @schema_name sysname
+declare @errorText varchar(MAX)
+declare curTables cursor for
+select distinct schema_name(t.schema_id), t.name
+from sys.tables t
+  join sys.sysindexes si on t.object_id = si.id
+where type = 'U'
+  and si.dpages > 10000;
+  
+open curTables;
+fetch next
+  from curTables into @schema_name, @tableName 
+  while @@fetch_status = 0 
+  begin
+    begin try
+      insert into ##Tables
+        exec sp_estimate_data_compression_savings @schema_name,
+        @tableName,
+        null,
+        null,
+        'ROW'
+    end try 
+    begin catch
+      set @errorText = @schema_name + '.' + @tableName + ' : ' + error_message() print @errorText
+    end catch
+    fetch next
+    from curTables into @schema_name, @tableName 
+  end 
+  close curTables;
+  deallocate curTables;
+  
+  
+  
+  
+  	SELECT t.object_name, si.name index_name, t.index_id, si.rowcnt, cast (si.dpages * 8 / (1024 * 1024 * 1.0) as decimal (10,2)) as gb_size, 
+	cast(1 - size_with_requested_compression_setting / (size_with_current_compression_setting * 1.0) as decimal (10,2)) * 100 saving
+	from ##Tables t (nolock) join sys.sysindexes si
+	on object_name (si.id) = t.object_name
+	and si.indid = t.index_id
+	order by gb_size desc
+	
+	
+
+
+
+
+select type, name, cast( pages_kb * 1.0 / (1024*1024) as decimal(10,2)) gb
+from sys.dm_os_memory_clerks
+order by pages_kb desc
+go
+
+select top 100 v.name, v.index_name, d.allocation_unit_id, count(*)
+from sys.dm_os_buffer_descriptors d
+join (
+select u.allocation_unit_id, o.object_id, o.name, i.name index_name from sys.allocation_units u
+join sys.partitions p
+on p.hobt_id = u.container_id
+join sys.objects o 
+on o.object_id = p.object_id
+join sys.indexes i
+on o.object_id = i.object_id
+) v
+on d.allocation_unit_id = v.allocation_unit_id
+group by v.name, v.index_name, d.allocation_unit_id
+-- order by 3 desc
+
+
+
+
+select d.allocation_unit_id, count(*) rows
+into #t
+from sys.dm_os_buffer_descriptors d
+group by d.allocation_unit_id
+
+
+
+select v.name, v.index_name, cast(d.rows * 8. / (1024*1024) as decimal (10,2)) gb 
+from #t d
+join (
+select u.allocation_unit_id, o.object_id, o.name, i.name index_name from sys.allocation_units u
+join sys.partitions p
+on p.hobt_id = u.container_id
+join sys.objects o 
+on o.object_id = p.object_id
+join sys.indexes i
+on o.object_id = i.object_id and p.index_id = i.index_id
+) v
+on d.allocation_unit_id = v.allocation_unit_id
+ order by 3 desc
+
+
+-- cursores
+
+select c.session_id, count(*) -- c.cursor_id
+from sys.dm_exec_cursors(0) c
+group by c.session_id
+order by 2 desc
+
+
+select c.session_id, t.text, count(*) cantidad ---- c.cursor_id
+from sys.dm_exec_cursors(0) c
+cross apply sys.dm_exec_sql_text (c.sql_handle) t
+group by c.session_id, t.text
+order by 3 desc
+
+
+select * from sys.dm_exec_connections
+
+
+
+
+select * --top 10 c.session_id, c.cursor_id, c.name, t.*
+from sys.dm_exec_cursors(0) c
+cross apply sys.dm_exec_sql_text (c.sql_handle) t
+
+
+
+
+SELECT TOP 20 
+    SUBSTRING(qt.TEXT, (qs.statement_start_offset/2)+1,
+    ((CASE qs.statement_end_offset
+         WHEN -1 THEN DATALENGTH(qt.TEXT)
+         ELSE qs.statement_end_offset
+      END - qs.statement_start_offset)/2)+1) as query,
+    qs.execution_count,
+    qs.total_logical_reads, qs.last_logical_reads,
+    qs.total_logical_writes, qs.last_logical_writes,
+    qs.total_worker_time, qs.last_worker_time,
+    qs.total_elapsed_time/1000000 total_elapsed_time_in_S,
+    qs.last_elapsed_time/1000000 last_elapsed_time_in_S,
+    qs.last_execution_time,
+    qp.query_plan
+FROM 
+    sys.dm_exec_query_stats qs
+CROSS APPLY 
+    sys.dm_exec_sql_text(qs.sql_handle) qt
+CROSS APPLY 
+    sys.dm_exec_query_plan(qs.plan_handle) qp
+-- ORDER BY 
+--    qs.total_logical_reads DESC -- logical reads
+-- ORDER BY 
+--     qs.total_logical_writes DESC -- logical writes
+ORDER BY 
+    qs.total_worker_time DESC -- CPU time
+	
+	
+	
+	
+	
+	
+	
+DECLARE @doc VARCHAR(8000)
+
+SET @doc = '
+  <Ranges>
+    <Range 
+        FromDate="20230221 09:00:00"
+        ToDate="20230221 13:00:00"/>
+  </Ranges>
+'
+
+exec [dbo].[sproc_get_file_stats_per_db_hour]
+  @xml_date_filter_ranges = @doc
+
+
+
+
+
+
+
+	

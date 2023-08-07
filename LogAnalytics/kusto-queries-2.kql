@@ -1,6 +1,8 @@
 //
 // listar tablas y registros en un recurso de Log
-search "*" | summarize count() by $table | sort by count_ desc
+search "*" 
+| summarize count() by $table 
+| sort by count_ desc
 
 
 //
@@ -24,8 +26,8 @@ AzureDiagnostics
 //
 // recogida full para agregar en Power BI
 AzureDiagnostics
-| where ResourceProvider == ""MICROSOFT.SQL"" and (OperationName  == ""DatabaseWaitStatistcsEvent"" or OperationName  == ""DatabaseWaitStatisticsEvent"")
-| parse _ResourceId with * ""/microsoft.sql/servers/"" LogicalServerName ""/databases/"" DatabaseName
+| where ResourceProvider == "MICROSOFT.SQL" and (OperationName  == "DatabaseWaitStatistcsEvent" or OperationName  == "DatabaseWaitStatisticsEvent")
+| parse _ResourceId with * "/microsoft.sql/servers/" LogicalServerName "/databases/" DatabaseName
 | project TimeGenerated, Category, ResourceGroup, LogicalServerName_s, DatabaseName_s, wait_type_s, delta_wait_time_ms_d, delta_waiting_tasks_count_d 
 
 

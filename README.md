@@ -38,9 +38,8 @@ Publicaciones:
 - Monitorización
   - DMVs
   - GUI
-  - Análisis de eficienta -- Referencia para clientes [trazas vs XEvents](/Rendimiento/trazas-Xevent.ipynb)
-  - Análisis de eficienta -- Referencia para clientes [trazas vs Auditing](/Rendimiento/trazas-Auditing.ipynb)
-  
+  - Análisis de eficiencia -- Referencia para clientes [trazas vs XEvents](/Rendimiento/trazas-Xevent.ipynb)
+  - Análisis de eficienica -- Referencia para clientes [trazas vs Auditing](/Rendimiento/trazas-Auditing.ipynb)
 
 # Herramientas
 
