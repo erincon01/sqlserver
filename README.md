@@ -16,7 +16,9 @@ Publicaciones:
   - Errorlog
   - Trazas/Eventos Extendidos
   - Bases de datos [copias de seguridad](/Mantenimiento/copias_de_seguridad.ipynb)
-  - Objetos (tablas, e índices): [Análisis de fragmentación](/Mantenimiento/analisis_fragmentacion.ipynb), [Defragmentación](/Mantenimiento/defragmentacion.ipynb)
+  - Objetos (tablas, e índices)
+      - [Análisis de fragmentación](/Mantenimiento/analisis_fragmentacion.ipynb)
+      - [Defragmentación](/Mantenimiento/defragmentacion.ipynb)
 - Planes de ejecución
   - Fundamentos de planes de ejecución
   - Operadores habituales
