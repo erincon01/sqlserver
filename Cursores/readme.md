@@ -60,25 +60,26 @@ CLOSE cursorPersona
 DEALLOCATE cursorPersona
 ```
 
-**(Diagnostico de cursores DMVs)[ejemplo_cursor.sql]**
+**Scripts para avanzar estudio**
+[cursor multi](cursor_multi.sql)
+[ejemplo cursor](ejemplo_cursor.sql)
+[Diagnostico de cursores DMVs](monitorizar-cursores-sqlserver.sql)
 
 
-
-
-**Recursos para publicacion**
-
+**Recursos de estudio externos**
 Cursor Location:
 https://www.w3schools.com/asp/prop_rs_cursorlocation.asp
 
 client side vs server side:
 https://learn.microsoft.com/en-us/sql/ado/guide/data/the-significance-of-cursor-location?view=sql-server-ver16
 
-demo Pinal:
+Demo Pinal Dave:
 https://blog.sqlauthority.com/2015/01/10/sql-server-what-is-the-query-used-in-sp_cursorfetch-and-fetch-api_cursor/
 
-stackoverflow:
+Stackoverflow:
 https://stackoverflow.com/questions/56037800/difference-between-ado-client-side-vs-server-side-cursor-when-the-sql-server-dat
 
+Microsoft Learn:
 https://learn.microsoft.com/es-es/sql/relational-databases/cursors?view=sql-server-ver16
 
 
