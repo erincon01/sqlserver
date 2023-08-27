@@ -19,6 +19,7 @@ Publicaciones:
   - Objetos (tablas, e índices)
       - [Análisis de fragmentación](/Mantenimiento/analisis_fragmentacion.ipynb)
       - [Defragmentación](/Mantenimiento/defragmentacion.ipynb)
+  - [Cursores y DMVs](/Mantenimiento/cursores.md)
 - Planes de ejecución
   - Fundamentos de planes de ejecución
   - Operadores habituales
