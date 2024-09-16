@@ -5,6 +5,7 @@
 - [Guia de estudio](#guia-de-estudio)
 - [Herramientas](#herramientas)
 
+
 # Guia de estudio
 
 Publicaciones:
@@ -53,6 +54,8 @@ Publicaciones:
 - Visual Studio Code - [Descarga](https://code.visualstudio.com/download)
   - Extensiones: [SQL Tools](https://marketplace.visualstudio.com/items?itemName=mtxr.sqltools), [Bicep](https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-bicep), [Markdown](https://marketplace.visualstudio.com/items?itemName=yzhang.markdown-all-in-one), [Powershell](https://marketplace.visualstudio.com/items?itemName=ms-vscode.PowerShell)
   - [Teclas rápidas](png/keyboard-shortcuts-windows.pdf), [teclas rápidas (2)](https://www.sitepoint.com/visual-studio-code-keyboard-shortcuts/)
+- SQL Server Basics - [SqlServer](https://www.sqlshack.com/sql-server-training/)
+
   
   
 
